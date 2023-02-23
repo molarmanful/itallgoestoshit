@@ -2,10 +2,12 @@ lockfileVersion: 5.4
 
 specifiers:
   '@babylonjs/core': ^5.43.1
+  '@babylonjs/loaders': ^5.48.0
   '@types/react': ^18.0.27
   '@types/react-dom': ^18.0.10
   '@unocss/reset': ^0.48.5
   '@vitejs/plugin-vue': ^4.0.0
+  babylonjs-gltf2interface: ^5.48.0
   browserslist: ^4.21.4
   lightningcss: ^1.18.0
   unocss: ^0.48.5
@@ -16,6 +18,8 @@ specifiers:
 
 dependencies:
   '@babylonjs/core': 5.43.1
+  '@babylonjs/loaders': 5.48.0_lpa73df46dqc7worrke5agkxea
+  babylonjs-gltf2interface: 5.48.0
   vue: 3.2.45
   vue-resize-observer: 2.0.15
 
@@ -80,6 +84,16 @@ packages:
 
   /@babylonjs/core/5.43.1:
     resolution: {integrity: sha512-u/Uq/UqPgrIrH6Zmz96JCXPKDfN0rz/z+1GXHDOanmD4E600cneQ/IycaBjnyJM7Z863pYAZapBHaR6BpYa3LQ==}
+    dev: false
+
+  /@babylonjs/loaders/5.48.0_lpa73df46dqc7worrke5agkxea:
+    resolution: {integrity: sha512-BbZoceGDsUYis86OeAkFq9CQN1yJ59IOL0O0AtogOt8KQ5E8b0sH4MVdOwuV6h07yLVjo9Ir5RZsWKdGyuWHOw==}
+    peerDependencies:
+      '@babylonjs/core': ^5.22.0
+      babylonjs-gltf2interface: ^5.22.0
+    dependencies:
+      '@babylonjs/core': 5.43.1
+      babylonjs-gltf2interface: 5.48.0
     dev: false
 
   /@esbuild/android-arm/0.16.17:
@@ -643,6 +657,10 @@ packages:
       normalize-path: 3.0.0
       picomatch: 2.3.1
     dev: true
+
+  /babylonjs-gltf2interface/5.48.0:
+    resolution: {integrity: sha512-ovtgIE/koJDEWyuYkfczYrvzJbDG0v0wA6N+LeM3YT0ECmHPDwoFxaZiHlGa6Tde9brzLY1RLHCesA1IRv530g==}
+    dev: false
 
   /binary-extensions/2.2.0:
     resolution: {integrity: sha512-jDctJ/IVQbZoJykoeHbhXpOlNBqGNcwXJKJog42E5HDPUwQTSdjCHdihjj0DlnheQ7blbT6dHOafNAiS8ooQKA==}

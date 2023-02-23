@@ -10,4 +10,5 @@ export default defineConfig({
     presets: [presetAttributify(), presetUno(), presetAutoprefixer()],
   })],
   base: '/memorylane/',
+  assetsInclude: 'src/scenes/assets/**'
 })

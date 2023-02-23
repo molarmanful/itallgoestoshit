@@ -1,4 +1,7 @@
 import * as B from '@babylonjs/core'
+import '@babylonjs/loaders'
+import room0 from './assets/room0.glb'
+import room1 from './assets/room1.glb'
 
 let createScene = async (canvas, cb = _ => { }) => {
   let dpiScale = 4
@@ -7,9 +10,9 @@ let createScene = async (canvas, cb = _ => { }) => {
   let scene = new B.Scene(engine)
   scene.clearColor = B.Color3.Black().toLinearSpace()
 
-  let camera = new B.ArcRotateCamera('camera', Math.PI / 4, Math.PI / 4, 100, B.Vector3.Zero(), scene)
-  camera.fov = .1
-  // camera.attachControl(canvas, true)
+  let camera = new B.UniversalCamera('camera', new B.Vector3(5, 4, -7), scene)
+  // camera.fov = 1.5
+  camera.attachControl(canvas, true)
 
   let pipe = new B.DefaultRenderingPipeline('pipe', true, scene, [camera])
   pipe.samples = 4
@@ -18,26 +21,25 @@ let createScene = async (canvas, cb = _ => { }) => {
   pipe.grainEnabled = true
   pipe.grain.animated = true
 
-  // let light = new B.HemisphericLight('light', new B.Vector3(0, 1, .5), scene)
-  let light = new B.DirectionalLight('light', new B.Vector3(-1, -4, -2), scene)
-  light.intensity = 1.4
-  let shadow = new B.CascadedShadowGenerator(2048, light)
-  shadow.usePercentageCloserFiltering = true
-  // shadow.stabilizeCascades = true
-  shadow.lambda = 1
-  shadow.cascadeBlendPercentage = 0
-  shadow.shadowMaxZ = camera.maxZ
-  shadow.depthClamp = false
-  shadow.autoCalcDepthBounds = true
+  let light = new B.HemisphericLight('light', new B.Vector3(0, 1, 0), scene)
+  // let light = new B.DirectionalLight('light', new B.Vector3(-1, -4, -2), scene)
+  // light.intensity = 1.4
+  // let shadow = new B.CascadedShadowGenerator(2048, light)
+  // shadow.usePercentageCloserFiltering = true
+  // // shadow.stabilizeCascades = true
+  // shadow.lambda = 1
+  // shadow.cascadeBlendPercentage = 0
+  // shadow.shadowMaxZ = camera.maxZ
+  // shadow.depthClamp = false
+  // shadow.autoCalcDepthBounds = true
 
   // let gl = new B.GlowLayer('glow', scene, {
   //   mainTextureSamples: 4,
   // })
 
-  let boxSize = .2
-  let box = B.MeshBuilder.CreateBox('box', { size: boxSize }, scene)
-  shadow.getShadowMap().renderList.push(box)
-  box.receiveShadows = true
+  let r0a = await B.SceneLoader.ImportMeshAsync('', room0, void 0, scene)
+  let r0 = r0a.meshes[0]
+  r0.scaling = new B.Vector3(10, 10, -10)
 
   engine.runRenderLoop(() => {
     scene.render()
