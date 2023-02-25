@@ -10,8 +10,10 @@ let createScene = async (canvas, cb = _ => { }) => {
   let scene = new B.Scene(engine)
   scene.clearColor = B.Color3.Black().toLinearSpace()
 
-  let camera = new B.UniversalCamera('camera', new B.Vector3(5, 4, -7), scene)
-  // camera.fov = 1.5
+  let camera = new B.UniversalCamera('camera', new B.Vector3(20, 2, -6), scene)
+  camera.fov = 1.3
+  camera.rotation = new B.Vector3(0, Math.PI / 2, 0)
+  camera.speed = 0.1
   camera.attachControl(canvas, true)
 
   let pipe = new B.DefaultRenderingPipeline('pipe', true, scene, [camera])
@@ -21,9 +23,27 @@ let createScene = async (canvas, cb = _ => { }) => {
   pipe.grainEnabled = true
   pipe.grain.animated = true
 
-  let light = new B.HemisphericLight('light', new B.Vector3(0, 1, 0), scene)
-  // let light = new B.DirectionalLight('light', new B.Vector3(-1, -4, -2), scene)
-  // light.intensity = 1.4
+  // let test = B.MeshBuilder.CreateBox('box', {}, scene)
+  // test.position = new B.Vector3(18.7, 12, -19.5)
+  // let testmat = new B.StandardMaterial('', scene)
+  // testmat.emissiveColor = B.Color3.White()
+  // test.material = testmat
+
+  // let hlight = new B.HemisphericLight('hlight', new B.Vector3(1, 1, -1), scene)
+  // hlight.intensity = .1
+
+  let light0 = new B.PointLight('light0', new B.Vector3(4, 12.1, 0), scene)
+  light0.intensity = 5
+  let light00 = new B.SpotLight('light00', new B.Vector3(4, 12, 0), new B.Vector3(0, -1, 0), Math.PI * .75, 1, scene)
+  light00.intensity = 100
+  light0.diffuse = light00.diffuse = B.Color3.FromHexString('#ff984f')
+
+  let light1 = new B.PointLight('light1', new B.Vector3(18.7, 12, -19.5), scene)
+  light1.intensity = 5
+  light1.diffuse = B.Color3.FromHexString('#ccf3ff')
+
+  // let light = new B.DirectionalLight('light', new B.Vector3(-1, -1, 1), scene)
+  // light.intensity = 1
   // let shadow = new B.CascadedShadowGenerator(2048, light)
   // shadow.usePercentageCloserFiltering = true
   // // shadow.stabilizeCascades = true
@@ -32,6 +52,22 @@ let createScene = async (canvas, cb = _ => { }) => {
   // shadow.shadowMaxZ = camera.maxZ
   // shadow.depthClamp = false
   // shadow.autoCalcDepthBounds = true
+
+  // let clheight = 5
+  // let cldiam = 1.1
+  // let clight = B.MeshBuilder.CreateCylinder('clight', { height: clheight, diameter: cldiam }, scene)
+  // clight.position = new B.Vector3(4.3, 8.2, 5)
+  // clight.rotation = new B.Vector3(0, 0, Math.PI / 2)
+
+  // let emis = new B.StandardMaterial('emis', scene)
+  // emis.emissiveColor = B.Color3.FromHexString('#ff984f')
+  // clight.material = emis
+
+  // let csph0 = B.MeshBuilder.CreateSphere('csph0', { diameter: cldiam }, scene)
+  // let csph1 = B.MeshBuilder.CreateSphere('csph1', { diameter: cldiam }, scene)
+  // csph0.parent = csph1.parent = clight
+  // csph0.position = new B.Vector3(0, -clheight / 2 + .1, 0)
+  // csph1.position = new B.Vector3(0, clheight / 2 - .1, 0)
 
   // let gl = new B.GlowLayer('glow', scene, {
   //   mainTextureSamples: 4,
