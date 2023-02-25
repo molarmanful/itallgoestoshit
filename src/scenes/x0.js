@@ -25,6 +25,8 @@ let createScene = async (canvas, cb = _ => { }) => {
   pipe.chromaticAberration.aberrationAmount = 6
   pipe.grainEnabled = true
   pipe.grain.animated = true
+  pipe.sharpenEnabled = true
+  pipe.sharpen.edgeAmount = 0
 
   // let test = B.MeshBuilder.CreateBox('box', {}, scene)
   // test.position = new B.Vector3(18.7, 12, -19.5)
@@ -147,6 +149,7 @@ let createScene = async (canvas, cb = _ => { }) => {
           _ => {
             pipe.chromaticAberration.aberrationAmount += Math.random()
             pipe.grain.intensity += Math.random()
+            pipe.sharpen.edgeAmount += bias()
           },
           _ => {
             let hsv = r0mat.albedoColor.toHSV()
