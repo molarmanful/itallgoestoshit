@@ -19,6 +19,6 @@ export default defineConfig({
       ]
     })
   ],
-  base: '/vanishingpoint/',
+  base: '/itallgoestoshit/',
   assetsInclude: 'src/scenes/assets/**'
 })
