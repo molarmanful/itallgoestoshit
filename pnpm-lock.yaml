@@ -16,7 +16,6 @@ specifiers:
   browserslist: ^4.21.4
   lightningcss: ^1.18.0
   unocss: ^0.48.5
-  unocss-preset-autoprefixer: ^0.0.4
   vite: ^4.0.4
   vue: ^3.2.45
   vue-resize-observer: ^2.0.15
@@ -41,7 +40,6 @@ devDependencies:
   browserslist: 4.21.4
   lightningcss: 1.18.0
   unocss: 0.48.5_vite@4.0.4
-  unocss-preset-autoprefixer: 0.0.4_djfgd4jqvn4a6qbhd2q2tkbene
   vite: 4.0.4
 
 packages:
@@ -1424,18 +1422,6 @@ packages:
     engines: {node: '>=12.18'}
     dependencies:
       busboy: 1.6.0
-    dev: true
-
-  /unocss-preset-autoprefixer/0.0.4_djfgd4jqvn4a6qbhd2q2tkbene:
-    resolution: {integrity: sha512-i6OvzPiVnZa7PfsmFpz6VGlBgxP3kcPkcKLwq+DZf5t5bWG1TK1WuVcgdxx51l6pBgGP2NXd8348b8PDACwGHA==}
-    peerDependencies:
-      browserslist: ^4.21.3
-      lightningcss: ^1.16.0
-      unocss: ^0.45.5
-    dependencies:
-      browserslist: 4.21.4
-      lightningcss: 1.18.0
-      unocss: 0.48.5_vite@4.0.4
     dev: true
 
   /unocss/0.48.5_vite@4.0.4:

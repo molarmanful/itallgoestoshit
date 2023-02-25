@@ -28,7 +28,6 @@
     "browserslist": "^4.21.4",
     "lightningcss": "^1.18.0",
     "unocss": "^0.48.5",
-    "unocss-preset-autoprefixer": "^0.0.4",
     "vite": "^4.0.4"
   }
 }
