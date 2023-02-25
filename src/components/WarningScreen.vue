@@ -7,9 +7,11 @@ let fade = ref(true)
 
 <template>
   <TitleScreen :opacity="fade * 100" :pointer-events="fade ? 'auto' : 'none'" @dblclick="fade = false">
-    <h1 text-center>warning</h1>
+    <h1 text="center head">warning</h1>
+    <br>
     <p>contains flashing lights and distorted sounds.</p>
     <p>best experienced with headphones on desktop.</p>
+    <br>
     <p text-center animate-pulse>[double-click to continue]</p>
   </TitleScreen>
 </template>
