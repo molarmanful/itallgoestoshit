@@ -19,6 +19,6 @@ export default defineConfig({
       ]
     })
   ],
-  base: '/memorylane/',
+  base: '/vanishingpoint/',
   assetsInclude: 'src/scenes/assets/**'
 })
