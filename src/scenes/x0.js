@@ -102,74 +102,77 @@ let createScene = async (canvas, cb = _ => { }) => {
 
   // scene.debugLayer.show()
 
-  let cr = camera.rotation
-  let pcam = cr.clone()
-  let flick = 1
-  let bias = (n = .5) => Math.random() * (2 + n) - 1
-  scene.onBeforeRenderObservable.add(_ => {
-    let dist = cr.subtract(pcam).length()
-    pcam.set(cr.x, cr.y, cr.z)
-
-    if (Math.random() > flick - dist) {
-      rpick([
-        _ => {
-          for (let a of ['uRotationCenter', 'vRotationCenter'])
-            r0mat.albedoTexture[a] = Math.random()
-          for (let a of ['uOffset', 'vOffset', 'uAng', 'vAng', 'uScale', 'vScale'])
-            r0mat.albedoTexture[a] += .001 * bias()
-          for (let a of ['uScale', 'vScale', 'level'])
-            r0mat.albedoTexture[a] += .005 * bias(0)
-        },
-        _ => {
-          r0mat.metallic += .01 * Math.random()
-          r0mat.iridescence.intensity += .1 * Math.random()
-        },
-        _ => {
-          pipe.chromaticAberration.aberrationAmount += Math.random()
-          pipe.grain.intensity += Math.random()
-        },
-        _ => {
-          let hsv = r0mat.albedoColor.toHSV()
-          hsv.r += 4 * bias()
-          hsv.g = Math.min(1, Math.max(0, hsv.g + .1 * bias()))
-          hsv.b = 1
-          B.Color3.HSVtoRGBToRef(hsv.r, hsv.g, hsv.b, r0mat.albedoColor)
-        },
-        _ => flick -= .01 * bias(1),
-        _ => {
-          let vpos = node0.getVerticesData(B.VertexBuffer.PositionKind)
-          for (let i in vpos) vpos[i] += .0005 * bias(0)
-          node0.setVerticesData(B.VertexBuffer.PositionKind, vpos)
-        },
-      ])()
+  let loop = _ => {
+    engine.enterPointerlock()
+    scene.onPointerDown = _ => {
+      if (!engine.isPointerLock) engine.enterPointerlock()
     }
 
-    let i = 0
-    let x
-    for (let l of lights) {
-      if (i == 1) { }
-      else if (l.hi && Math.random() > flick) {
-        l.hi = false
-        x = .5 + .5 * Math.random()
-      }
-      else {
-        l.hi = true
-        x = .9 + .1 * Math.random()
-      }
-      l.light.intensity = l.intensity * x
-      i++
-    }
-  })
+    let cr = camera.rotation
+    let pcam = cr.clone()
+    let flick = 1
+    let bias = (n = .5) => Math.random() * (2 + n) - 1
+    scene.onBeforeRenderObservable.add(_ => {
+      let dist = cr.subtract(pcam).length()
+      pcam.set(cr.x, cr.y, cr.z)
 
-  engine.runRenderLoop(() => {
-    scene.render()
-  })
+      if (Math.random() > flick - dist) {
+        rpick([
+          _ => {
+            for (let a of ['uRotationCenter', 'vRotationCenter'])
+              r0mat.albedoTexture[a] = Math.random()
+            for (let a of ['uOffset', 'vOffset', 'uAng', 'vAng', 'uScale', 'vScale'])
+              r0mat.albedoTexture[a] += .001 * bias()
+            for (let a of ['uScale', 'vScale', 'level'])
+              r0mat.albedoTexture[a] += .005 * bias(0)
+          },
+          _ => {
+            r0mat.metallic += .01 * Math.random()
+            r0mat.iridescence.intensity += .1 * Math.random()
+          },
+          _ => {
+            pipe.chromaticAberration.aberrationAmount += Math.random()
+            pipe.grain.intensity += Math.random()
+          },
+          _ => {
+            let hsv = r0mat.albedoColor.toHSV()
+            hsv.r += 4 * bias()
+            hsv.g = Math.min(1, Math.max(0, hsv.g + .1 * bias()))
+            hsv.b = 1
+            B.Color3.HSVtoRGBToRef(hsv.r, hsv.g, hsv.b, r0mat.albedoColor)
+          },
+          _ => flick -= .01 * bias(1),
+          _ => {
+            let vpos = node0.getVerticesData(B.VertexBuffer.PositionKind)
+            for (let i in vpos) vpos[i] += .0005 * bias(0)
+            node0.setVerticesData(B.VertexBuffer.PositionKind, vpos)
+          },
+        ])()
+      }
+
+      let i = 0
+      let x
+      for (let l of lights) {
+        if (i == 1) { }
+        else if (l.hi && Math.random() > flick) {
+          l.hi = false
+          x = .5 + .5 * Math.random()
+        }
+        else {
+          l.hi = true
+          x = .9 + .1 * Math.random()
+        }
+        l.light.intensity = l.intensity * x
+        i++
+      }
+    })
+  }
 
   addEventListener('resize', _ => {
     engine.resize()
   })
 
-  cb({ engine, scene })
+  cb({ engine, scene, loop })
 }
 
 export { createScene }

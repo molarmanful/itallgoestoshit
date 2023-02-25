@@ -6,9 +6,19 @@ import presetAutoprefixer from 'unocss-preset-autoprefixer'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [vue(), unocss({
-    presets: [presetAttributify(), presetUno(), presetAutoprefixer()],
-  })],
+  plugins: [
+    vue(),
+    unocss({
+      presets: [presetAttributify(), presetUno(), presetAutoprefixer()],
+      shortcuts: [
+        {
+          'fl-center': 'flex justify-center items-center',
+          'hw-screen': 'h-screen w-screen',
+        },
+        [/^ofade-([\d]*)$/, ([, c]) => `transition-opacity duration-${c}`],
+      ]
+    })
+  ],
   base: '/memorylane/',
   assetsInclude: 'src/scenes/assets/**'
 })

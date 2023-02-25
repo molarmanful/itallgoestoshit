@@ -1,15 +1,23 @@
 <script setup>
 import { ref, onMounted } from 'vue'
+import WarningScreen from './components/WarningScreen.vue'
+import SplashScreen from './components/SplashScreen.vue'
 import { createScene } from './scenes/x0'
 
 let bcan = ref(null)
 let fps = ref(0)
 let ready = ref(false)
+let start = ref(false)
 
 onMounted(_ => {
-  createScene(bcan.value, ({ engine, scene }) => {
+  createScene(bcan.value, ({ engine, scene, loop }) => {
+    engine.runRenderLoop(() => {
+      scene.render()
+    })
+
     scene.executeWhenReady(_ => {
       ready.value = true
+      start.value = loop
     })
 
     scene.registerAfterRender(_ => {
@@ -20,9 +28,11 @@ onMounted(_ => {
 </script>
 
 <template>
-  <section flex justify-center items-center transition-opacity duration-500 :opacity="ready * 100">
-    <span fixed top-0 right-0 text-white>{{ fps }}fps</span>
-    <canvas ref="bcan" w-screen h-screen outline-0></canvas>
+  <section fl-center>
+    <canvas ref="bcan" hw-screen outline-0></canvas>
+    <span fixed top-0 right-0 text="white 50%">{{ fps }}fps</span>
   </section>
-  <div hidden opacity="0 100" />
+  <SplashScreen @click="start && start()" :loaded="+!!start" />
+  <WarningScreen />
+  <div hidden opacity="0 100" pointer-events="auto none" />
 </template>
