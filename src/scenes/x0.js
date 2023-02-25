@@ -2,6 +2,7 @@ import * as B from '@babylonjs/core'
 import '@babylonjs/loaders'
 // import '@babylonjs/inspector'
 import room0 from './assets/room0.glb'
+import burning_memory from './assets/burning_memory.ogg'
 
 let rpick = xs => xs[Math.random() * xs.length | 0]
 
@@ -100,6 +101,17 @@ let createScene = async (canvas, cb = _ => { }) => {
 
   let node0 = scene.getMeshByName('node0')
 
+  let music
+  let mustart = _ => {
+    music = new B.Sound('music', burning_memory, scene, null, {
+      loop: true,
+      autoplay: true,
+      spatialSound: true,
+      volume: .1,
+    })
+    music.setPosition(new B.Vector3(4, 12, 0))
+  }
+
   // scene.debugLayer.show()
 
   let loop = _ => {
@@ -109,12 +121,14 @@ let createScene = async (canvas, cb = _ => { }) => {
     }
 
     let cr = camera.rotation
+    let musrc = music.getSoundSource()
     let pcam = cr.clone()
     let flick = 1
     let bias = (n = .5) => Math.random() * (2 + n) - 1
     scene.onBeforeRenderObservable.add(_ => {
       let dist = cr.subtract(pcam).length()
       pcam.set(cr.x, cr.y, cr.z)
+      if (!musrc) musrc = music.getSoundSource()
 
       if (Math.random() > flick - dist) {
         rpick([
@@ -148,6 +162,12 @@ let createScene = async (canvas, cb = _ => { }) => {
             node0.setVerticesData(B.VertexBuffer.PositionKind, vpos)
           },
         ])()
+        rpick([
+          _ => music.setPlaybackRate(music.getPlaybackRate() + .005 * bias()),
+          _ => {
+            if (musrc) musrc.detune.value -= 2 * bias(.5)
+          },
+        ])()
       }
 
       let i = 0
@@ -172,7 +192,7 @@ let createScene = async (canvas, cb = _ => { }) => {
     engine.resize()
   })
 
-  cb({ engine, scene, loop })
+  cb({ B, engine, scene, mustart, loop })
 }
 
 export { createScene }
