@@ -13,7 +13,7 @@ let createScene = async (canvas, cb = _ => { }) => {
   let camera = new B.UniversalCamera('camera', new B.Vector3(20, 2, -6), scene)
   camera.fov = 1.3
   camera.rotation = new B.Vector3(0, Math.PI / 2, 0)
-  camera.speed = 0.1
+  camera.speed = 0
   camera.attachControl(canvas, true)
 
   let pipe = new B.DefaultRenderingPipeline('pipe', true, scene, [camera])
@@ -32,15 +32,28 @@ let createScene = async (canvas, cb = _ => { }) => {
   // let hlight = new B.HemisphericLight('hlight', new B.Vector3(1, 1, -1), scene)
   // hlight.intensity = .1
 
-  let light0 = new B.PointLight('light0', new B.Vector3(4, 12.1, 0), scene)
-  light0.intensity = 5
-  let light00 = new B.SpotLight('light00', new B.Vector3(4, 12, 0), new B.Vector3(0, -1, 0), Math.PI * .75, 1, scene)
-  light00.intensity = 100
-  light0.diffuse = light00.diffuse = B.Color3.FromHexString('#ff984f')
-
-  let light1 = new B.PointLight('light1', new B.Vector3(18.7, 12, -19.5), scene)
-  light1.intensity = 5
-  light1.diffuse = B.Color3.FromHexString('#ccf3ff')
+  let lights = [
+    {
+      light: new B.PointLight('light0', new B.Vector3(4, 12.1, 0), scene),
+      intensity: 5,
+      diffuse: B.Color3.FromHexString('#ff984f'),
+    },
+    {
+      light: new B.SpotLight('light00', new B.Vector3(4, 12, 0), new B.Vector3(0, -1, 0), Math.PI * .75, 1, scene),
+      intensity: 100,
+      diffuse: B.Color3.FromHexString('#ff984f'),
+    },
+    {
+      light: new B.PointLight('light1', new B.Vector3(18.7, 12, -19.5), scene),
+      intensity: 5,
+      diffuse: B.Color3.FromHexString('#ccf3ff'),
+    },
+  ]
+  for (let l of lights) {
+    l.hi = true
+    l.light.intensity = l.intensity
+    l.light.diffuse = l.diffuse
+  }
 
   // let light = new B.DirectionalLight('light', new B.Vector3(-1, -1, 1), scene)
   // light.intensity = 1
@@ -78,6 +91,22 @@ let createScene = async (canvas, cb = _ => { }) => {
   r0.scaling = new B.Vector3(10, 10, -10)
 
   engine.runRenderLoop(() => {
+    let i = 0
+    let x
+    for (let l of lights) {
+      if (i == 1) { }
+      else if (l.hi && Math.random() > .99) {
+        l.hi = false
+        x = .5 + .5 * Math.random()
+      }
+      else {
+        l.hi = true
+        x = .9 + .1 * Math.random()
+      }
+      l.light.intensity = l.intensity * x
+      i++
+    }
+
     scene.render()
   })
 
