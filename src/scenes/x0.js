@@ -1,7 +1,9 @@
 import * as B from '@babylonjs/core'
 import '@babylonjs/loaders'
+// import '@babylonjs/inspector'
 import room0 from './assets/room0.glb'
-import room1 from './assets/room1.glb'
+
+let rpick = xs => xs[Math.random() * xs.length | 0]
 
 let createScene = async (canvas, cb = _ => { }) => {
   let dpiScale = 4
@@ -12,7 +14,7 @@ let createScene = async (canvas, cb = _ => { }) => {
 
   let camera = new B.UniversalCamera('camera', new B.Vector3(20, 2, -6), scene)
   camera.fov = 1.3
-  camera.rotation = new B.Vector3(0, Math.PI / 2, 0)
+  camera.rotation = new B.Vector3(0, -Math.PI / 3, 0)
   camera.speed = 0
   camera.attachControl(canvas, true)
 
@@ -29,8 +31,8 @@ let createScene = async (canvas, cb = _ => { }) => {
   // testmat.emissiveColor = B.Color3.White()
   // test.material = testmat
 
-  // let hlight = new B.HemisphericLight('hlight', new B.Vector3(1, 1, -1), scene)
-  // hlight.intensity = .1
+  // let hlight = new B.HemisphericLight('hlight', new B.Vector3(1, 0, -1), scene)
+  // hlight.intensity = .01
 
   let lights = [
     {
@@ -40,7 +42,7 @@ let createScene = async (canvas, cb = _ => { }) => {
     },
     {
       light: new B.SpotLight('light00', new B.Vector3(4, 12, 0), new B.Vector3(0, -1, 0), Math.PI * .75, 1, scene),
-      intensity: 100,
+      intensity: 500,
       diffuse: B.Color3.FromHexString('#ff984f'),
     },
     {
@@ -89,13 +91,64 @@ let createScene = async (canvas, cb = _ => { }) => {
   let r0a = await B.SceneLoader.ImportMeshAsync('', room0, void 0, scene)
   let r0 = r0a.meshes[0]
   r0.scaling = new B.Vector3(10, 10, -10)
+  r0.receiveShadows = true
 
-  engine.runRenderLoop(() => {
+  let r0mat = scene.getMaterialByName('material0')
+  r0mat.iridescence.isEnabled = true
+  r0mat.iridescence.intensity = 0
+  r0mat.albedoTexture.wrapU = r0mat.albedoTexture.wrapV = 2
+
+  let node0 = scene.getMeshByName('node0')
+
+  // scene.debugLayer.show()
+
+  let cr = camera.rotation
+  let pcam = cr.clone()
+  let flick = 1
+  let bias = (n = .5) => Math.random() * (2 + n) - 1
+  scene.onBeforeRenderObservable.add(_ => {
+    let dist = cr.subtract(pcam).length()
+    pcam.set(cr.x, cr.y, cr.z)
+
+    if (Math.random() > flick - dist) {
+      rpick([
+        _ => {
+          for (let a of ['uRotationCenter', 'vRotationCenter'])
+            r0mat.albedoTexture[a] = Math.random()
+          for (let a of ['uOffset', 'vOffset', 'uAng', 'vAng', 'uScale', 'vScale'])
+            r0mat.albedoTexture[a] += .001 * bias()
+          for (let a of ['uScale', 'vScale', 'level'])
+            r0mat.albedoTexture[a] += .005 * bias(0)
+        },
+        _ => {
+          r0mat.metallic += .01 * Math.random()
+          r0mat.iridescence.intensity += .1 * Math.random()
+        },
+        _ => {
+          pipe.chromaticAberration.aberrationAmount += Math.random()
+          pipe.grain.intensity += Math.random()
+        },
+        _ => {
+          let hsv = r0mat.albedoColor.toHSV()
+          hsv.r += 4 * bias()
+          hsv.g = Math.min(1, Math.max(0, hsv.g + .1 * bias()))
+          hsv.b = 1
+          B.Color3.HSVtoRGBToRef(hsv.r, hsv.g, hsv.b, r0mat.albedoColor)
+        },
+        _ => flick -= .01 * bias(1),
+        _ => {
+          let vpos = node0.getVerticesData(B.VertexBuffer.PositionKind)
+          for (let i in vpos) vpos[i] += .0005 * bias(0)
+          node0.setVerticesData(B.VertexBuffer.PositionKind, vpos)
+        },
+      ])()
+    }
+
     let i = 0
     let x
     for (let l of lights) {
       if (i == 1) { }
-      else if (l.hi && Math.random() > .99) {
+      else if (l.hi && Math.random() > flick) {
         l.hi = false
         x = .5 + .5 * Math.random()
       }
@@ -106,7 +159,9 @@ let createScene = async (canvas, cb = _ => { }) => {
       l.light.intensity = l.intensity * x
       i++
     }
+  })
 
+  engine.runRenderLoop(() => {
     scene.render()
   })
 
