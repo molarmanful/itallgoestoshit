@@ -14,12 +14,12 @@
 
   onMount(_ => {
     fade = true
-    createScene(bcan, ({ engine, scene, music, loop }) => {
+    createScene(bcan, ({ engine, scene, mustart, loop }) => {
       flow0 = _ => {
         if (ready0) {
-          music.play()
           setTimeout(_ => {
             ready1 = true
+            mustart()
           }, 500)
           state++
         }

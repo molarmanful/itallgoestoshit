@@ -103,12 +103,16 @@ let createScene = async (canvas, cb = _ => { }) => {
 
   let node0 = scene.getMeshByName('node0')
 
-  let music = new B.Sound('music', burning_memory, scene, null, {
-    loop: true,
-    spatialSound: true,
-    volume: .1,
-  })
-  music.setPosition(new B.Vector3(4, 12, 0))
+  let music
+  let mustart = _ => {
+    music = new B.Sound('music', burning_memory, scene, null, {
+      loop: true,
+      autoplay: true,
+      spatialSound: true,
+      volume: .1,
+    })
+    music.setPosition(new B.Vector3(4, 12, 0))
+  }
 
   // scene.debugLayer.show()
 
@@ -195,7 +199,7 @@ let createScene = async (canvas, cb = _ => { }) => {
     engine.resize()
   })
 
-  cb({ B, engine, scene, music, loop })
+  cb({ B, engine, scene, mustart, loop })
 }
 
 export { createScene }
