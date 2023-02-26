@@ -11,7 +11,8 @@
   "dependencies": {
     "@babylonjs/core": "^5.43.1",
     "@babylonjs/loaders": "^5.48.0",
-    "babylonjs-gltf2interface": "^5.48.0"
+    "babylonjs-gltf2interface": "^5.48.0",
+    "svelte": "^3.55.1"
   },
   "devDependencies": {
     "@babylonjs/gui": "^5.48.0",
@@ -25,7 +26,6 @@
     "@unocss/reset": "^0.48.5",
     "browserslist": "^4.21.4",
     "lightningcss": "^1.18.0",
-    "svelte": "^3.55.1",
     "unocss": "^0.48.5",
     "vite": "^4.0.4"
   }
