@@ -8,13 +8,10 @@
   let fps = 0
   let state = 0
   let clickable = false
-  let created = false
   let flow0, flow1
 
   onMount(_ => {
     createScene(bcan, ({ engine, scene, mustart, loop }) => {
-      created = true
-
       flow0 = _ => {
         mustart()
         setTimeout(_ => {
