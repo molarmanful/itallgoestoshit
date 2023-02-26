@@ -1,10 +1,10 @@
-import { createApp } from 'vue'
 import '@unocss/reset/normalize.css'
 import 'uno.css'
 import './style.css'
-import App from './App.vue'
-import VueResizeObserver from 'vue-resize-observer'
+import App from './App.svelte'
 
-let app = createApp(App)
-app.use(VueResizeObserver)
-app.mount('#app')
+let app = new App({
+  target: document.getElementById('app'),
+})
+
+export default app
