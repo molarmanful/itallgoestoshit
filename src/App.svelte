@@ -32,9 +32,7 @@
       }
 
       scene.executeWhenReady(_ => {
-        setTimeout(_ => {
-          ready0 = true
-        }, 1000)
+        ready0 = true
       })
 
       scene.registerAfterRender(_ => {
@@ -53,10 +51,4 @@
   <WarningScreen on:click={_ => flow0()} loaded={ready0} fade={state == 0} />
 </main>
 
-<div
-  hidden
-  opacity="0 100"
-  cursor="pointer default"
-  pointer-events="auto none"
-  fade="true false"
-/>
+<div hidden cursor="pointer default" fade="true false" />
