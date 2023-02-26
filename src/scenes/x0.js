@@ -191,6 +191,10 @@ let createScene = async (canvas, cb = _ => { }) => {
     })
   }
 
+  engine.runRenderLoop(() => {
+    scene.render()
+  })
+
   addEventListener('resize', _ => {
     engine.resize()
   })

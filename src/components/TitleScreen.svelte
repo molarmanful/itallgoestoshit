@@ -1,6 +1,8 @@
 <script>
   export let cl = ''
   export let attrs = {}
+  export let fade = true
+  export let loaded = false
 </script>
 
 <section
@@ -13,6 +15,8 @@
   text-white
   ofade-500
   on:click
+  {fade}
+  cursor={loaded ? 'pointer' : 'default'}
   class={cl}
   {...attrs}
 >
