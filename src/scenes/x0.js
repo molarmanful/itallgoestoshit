@@ -1,5 +1,6 @@
 import * as B from '@babylonjs/core'
 import '@babylonjs/loaders'
+import FixedLoop from './FixedLoop?worker'
 // import '@babylonjs/inspector'
 import room0 from './assets/room0.glb'
 import burning_memory from './assets/burning_memory.ogg'
@@ -127,7 +128,9 @@ let createScene = async (canvas, cb = _ => { }) => {
     let pcam = cr.clone()
     let flick = 1
     let bias = (n = .5) => Math.random() * (2 + n) - 1
-    scene.onBeforeRenderObservable.add(_ => {
+
+    let fixed = new FixedLoop()
+    fixed.addEventListener('message', e => {
       let dist = cr.subtract(pcam).length()
       pcam.set(cr.x, cr.y, cr.z)
       if (!musrc) musrc = music.getSoundSource()
@@ -189,6 +192,7 @@ let createScene = async (canvas, cb = _ => { }) => {
         i++
       }
     })
+    fixed.postMessage({ deltaTime: .01 })
   }
 
   engine.runRenderLoop(() => {
