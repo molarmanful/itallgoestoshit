@@ -192,7 +192,7 @@ let createScene = async (canvas, cb = _ => { }) => {
         i++
       }
     })
-    fixed.postMessage({ deltaTime: .01 })
+    fixed.postMessage({ deltaTime: 1 / 60 })
   }
 
   engine.runRenderLoop(() => {
