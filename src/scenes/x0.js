@@ -13,11 +13,21 @@ let createScene = async (canvas, cb = _ => { }) => {
   engine.setHardwareScalingLevel(devicePixelRatio / dpiScale)
   let scene = new B.Scene(engine)
   scene.clearColor = B.Color3.Black().toLinearSpace()
+  scene.collisionsEnabled = true
+  scene.gravity.y = -.08
 
   let camera = new B.UniversalCamera('camera', new B.Vector3(20, 2, -6), scene)
   camera.fov = 1.3
   camera.rotation = new B.Vector3(0, -Math.PI / 3, 0)
-  camera.speed = 0
+  camera.speed = 0.2
+  camera.keysUp.push(87)
+  camera.keysDown.push(83)
+  camera.keysLeft.push(65)
+  camera.keysRight.push(68)
+  camera.checkCollisions = true
+  camera.applyGravity = true
+  camera.ellipsoid = new B.Vector3(1, 7, 1)
+  camera.minZ = .01
   camera.attachControl(canvas, true)
 
   let pipe = new B.DefaultRenderingPipeline('pipe', true, scene, [camera])
@@ -30,13 +40,13 @@ let createScene = async (canvas, cb = _ => { }) => {
   pipe.sharpen.edgeAmount = 0
 
   // let test = B.MeshBuilder.CreateBox('box', {}, scene)
-  // test.position = new B.Vector3(18.7, 12, -19.5)
+  // test.position = new B.Vector3(1, 0, -1)
   // let testmat = new B.StandardMaterial('', scene)
   // testmat.emissiveColor = B.Color3.White()
   // test.material = testmat
 
   // let hlight = new B.HemisphericLight('hlight', new B.Vector3(1, 0, -1), scene)
-  // hlight.intensity = .01
+  // hlight.intensity = .1
 
   let lights = [
     {
@@ -96,6 +106,9 @@ let createScene = async (canvas, cb = _ => { }) => {
   let r0 = r0a.meshes[0]
   r0.scaling = new B.Vector3(10, 10, -10)
   r0.receiveShadows = true
+  r0.checkCollisions = true
+
+  for (let m of r0.getChildMeshes()) m.checkCollisions = true
 
   let r0mat = scene.getMaterialByName('material0')
   r0mat.iridescence.isEnabled = true
@@ -103,6 +116,16 @@ let createScene = async (canvas, cb = _ => { }) => {
   r0mat.albedoTexture.wrapU = r0mat.albedoTexture.wrapV = 2
 
   let node0 = scene.getMeshByName('node0')
+
+  // let mir0 = B.MeshBuilder.CreatePlane('mir0', { width: 4.5, height: 8 }, scene)
+  // mir0.position = new B.Vector3(-1, 1.1, -2.5)
+  // mir0.rotation = new B.Vector3(0, -Math.PI / 2, 0)
+
+  // let mir0mat = new B.StandardMaterial('', scene)
+  // mir0mat.reflectionTexture = new B.MirrorTexture('', 1024, scene, true)
+  // mir0mat.reflectionTexture.mirrorPlane = B.Plane.FromPositionAndNormal(mir0.position, mir0.getFacetNormal(0).scale(-1))
+  // mir0mat.reflectionTexture.renderList = [r0]
+  // mir0.material = mir0mat
 
   let music
   let mustart = _ => {
