@@ -13,17 +13,17 @@ let createScene = async (canvas, cb = _ => { }) => {
   engine.setHardwareScalingLevel(devicePixelRatio / dpiScale)
   let scene = new B.Scene(engine)
   scene.clearColor = B.Color3.Black().toLinearSpace()
-  // scene.collisionsEnabled = true
-  // scene.gravity.y = -.08
+  scene.collisionsEnabled = true
+  scene.gravity.y = -.08
 
   let camera = new B.UniversalCamera('camera', new B.Vector3(20, 2, -6), scene)
   camera.fov = 1.3
   camera.rotation = new B.Vector3(0, -Math.PI / 3, 0)
-  camera.speed = 0
-  // camera.keysUp.push(87)
-  // camera.keysDown.push(83)
-  // camera.keysLeft.push(65)
-  // camera.keysRight.push(68)
+  camera.speed = .2
+  camera.keysUp.push(87)
+  camera.keysDown.push(83)
+  camera.keysLeft.push(65)
+  camera.keysRight.push(68)
   camera.checkCollisions = true
   camera.applyGravity = true
   camera.ellipsoid = new B.Vector3(1, 7, 1)
@@ -190,11 +190,12 @@ let createScene = async (canvas, cb = _ => { }) => {
             for (let i in vpos) vpos[i] += .0005 * bias(0)
             node0.setVerticesData(B.VertexBuffer.PositionKind, vpos)
           },
+          _ => camera.speed -= (camera.speed > 0 ? 1 : -1) * .005 * bias(),
         ])()
         rpick([
           _ => music.setPlaybackRate(music.getPlaybackRate() + .005 * bias()),
           _ => {
-            if (musrc) musrc.detune.value -= 2 * bias(.5)
+            if (musrc) musrc.detune.value -= 2 * bias()
           },
         ])()
       }
