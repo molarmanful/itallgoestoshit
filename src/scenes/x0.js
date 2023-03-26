@@ -7,6 +7,17 @@ import burning_memory from './assets/burning_memory.ogg'
 
 let rpick = xs => xs[Math.random() * xs.length | 0]
 
+class LightWrap {
+  constructor(light, intensity, diffuse) {
+    this.light = light
+    this.intensity = intensity
+    this.diffuse = diffuse
+    this.hi = true
+    this.light.intensity = this.intensity
+    this.light.diffuse = this.diffuse
+  }
+}
+
 let createScene = async (canvas, cb = _ => { }) => {
   let dpiScale = 4
   let engine = new B.Engine(canvas, true)
@@ -49,27 +60,22 @@ let createScene = async (canvas, cb = _ => { }) => {
   // hlight.intensity = .1
 
   let lights = [
-    {
-      light: new B.PointLight('light0', new B.Vector3(4, 12.1, 0), scene),
-      intensity: 5,
-      diffuse: B.Color3.FromHexString('#ff984f'),
-    },
-    {
-      light: new B.SpotLight('light00', new B.Vector3(4, 12, 0), new B.Vector3(0, -1, 0), Math.PI * .75, 1, scene),
-      intensity: 500,
-      diffuse: B.Color3.FromHexString('#ff984f'),
-    },
-    {
-      light: new B.PointLight('light1', new B.Vector3(18.7, 12, -19.5), scene),
-      intensity: 5,
-      diffuse: B.Color3.FromHexString('#ccf3ff'),
-    },
+    new LightWrap(
+      new B.PointLight('light0', new B.Vector3(4, 12.1, 0), scene),
+      5,
+      B.Color3.FromHexString('#ff984f'),
+    ),
+    new LightWrap(
+      new B.SpotLight('light00', new B.Vector3(4, 12, 0), new B.Vector3(0, -1, 0), Math.PI * .75, 1, scene),
+      500,
+      B.Color3.FromHexString('#ff984f'),
+    ),
+    new LightWrap(
+      new B.PointLight('light1', new B.Vector3(18.7, 12, -19.5), scene),
+      5,
+      B.Color3.FromHexString('#ccf3ff'),
+    ),
   ]
-  for (let l of lights) {
-    l.hi = true
-    l.light.intensity = l.intensity
-    l.light.diffuse = l.diffuse
-  }
 
   // let light = new B.DirectionalLight('light', new B.Vector3(-1, -1, 1), scene)
   // light.intensity = 1
